@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style/styles.css">
+	<title>Jeddit - Edit Article</title>
+</head>
+
+<body>
+  <header>
+		<div class="navbar">
+			<button><a href="/">Home</a></button>
+			<button><a href="/debugpage">Debug</a></button>
+
+			<% if (user === null || user === undefined) { %>
+				<p class="login-status">You are not logged in</p>
+				<button><a href="/users/login">Login</a></button>
+				<button><a href="/users/register">Register</a></button>
+			<% } else { %>
+				<p class="login-status">You are <a href="/users/profile/<%= user.id %>" id="user-link"><%= user.username %></a></p>
+				<form method="POST" action="/users/logout" class="logout-button">
+					<button>Log out</button>
+				</form>
+			<% } %>
+		</div>
+	</header>
+	
+	<main>
+    <h1>Edit an article in <%= article.sub_name %></h1>
+    <form action="/articles/edit/<%= article.id %>" method="post">
+      <label for="title" >Title</label>
+      <input type="hidden" name="sub" value=<%= article.sub_name %>>
+      <input type="text" name="title" class="input-label" value="<%= article.title %>"/> 
+      <br>
+      <label for="link" >Link</label>
+      <input type="text" name="link" class="input-label" value="<%= article.link %>"/> 
+      <br>
+      <label for="text" >Text</label>
+      <br>
+      <% if (article.text === null || article.text === undefined) { %>
+        <textarea name="text" rows="5" cols="30" class="input-label"></textarea> 
+      <% } else { %>
+        <textarea name="text" rows="5" cols="30" class="input-label"><%= article.text %></textarea> 
+      <% } %>
+      <br>
+      <button type="submit">Update article</button>
+    </form>
+
+		<button><a href="/subs/show/<%= article.sub_name %>" class="go-back-button">Never mind</a></button>
+	</main>
+</body>
+
+</html>

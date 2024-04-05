@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style/styles.css">
+	<title>Jeddit - Profile</title>
+</head>
+
+<body>
+  <header>
+		<div class="navbar">
+			<button><a href="/">Home</a></button>
+			<button><a href="/debugpage">Debug</a></button>
+
+			<% if (user === null || user === undefined) { %>
+				<p class="login-status">You are not logged in</p>
+				<button><a href="/users/login">Login</a></button>
+				<button><a href="/users/register">Register</a></button>
+			<% } else { %>
+				<p class="login-status">You are <a href="/users/profile/<%= user.id %>" id="user-link"><%= user.username %></a></p>
+				<form method="POST" action="/users/logout" class="logout-button">
+					<button>Log out</button>
+				</form>
+			<% } %>
+		</div>
+	</header>
+	
+	<main>
+    <h1>Articles and comments by <%= userProfile.username %></h1>
+
+    <form action="/users/profile/<%= userProfile.id %>" method="GET">
+			<label for="ordering">Sort by:</label>
+			<select name="ordering" id="ordering">
+				<option value="">No sorting</option>
+				<option value="top">Top</option>
+				<option value="new">Newest</option>
+				<option value="old">Oldest</option>
+				<option value="ragebait">Ragebait</option>
+			</select>
+			<button type="submit">Sort</button>
+		</form>
+
+    <h2>Articles</h2>
+
+    <ul>
+      <% userProfile.articles.forEach(article => { %>
+				<table>
+					<tr>
+						<td>
+							<span><%= article.upvotes - article.downvotes %></span>
+						</td>
+						<td>
+							<li><a href="/articles/show/<%= article.id %>"><%= article.title %></a></li>
+						</td>
+					</tr>
+				</table>
+        
+      <% }); %>
+    </ul>
+
+    <h2>Comments</h2>
+		<ul>
+      <% userProfile.comments.forEach(comment => { %>
+				<li>
+					<table>
+						<tr>
+							<td>
+								<span><%= comment.upvotes - comment.downvotes %></span>
+							</td>
+							<td>
+								at 
+								<% 
+								let ts = comment.ts;
+								let timestamp = parseInt(ts);
+								let date = new Date(timestamp);
+								let formattedDateTime = date.toLocaleString();
+								%>
+								<%= formattedDateTime %>: 
+								<a href="/comments/show/<%= comment.id %>"><%= comment.text %></a>
+							</td>
+						</tr>
+					</table>
+				</li>
+      <% }); %>
+    </ul>
+	
+	</main>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style/styles.css">
+	<title>Jeddit - Create Article</title>
+</head>
+
+<body>
+  <header>
+		<div class="navbar">
+			<button><a href="/">Home</a></button>
+			<button><a href="/debugpage">Debug</a></button>
+
+			<% if (user === null || user === undefined) { %>
+				<p class="login-status">You are not logged in</p>
+				<button><a href="/users/login">Login</a></button>
+				<button><a href="/users/register">Register</a></button>
+			<% } else { %>
+				<p class="login-status">You are <a href="/users/profile/<%= user.id %>" id="user-link"><%= user.username %></a></p>
+				<form method="POST" action="/users/logout" class="logout-button">
+					<button>Log out</button>
+				</form>
+			<% } %>
+		</div>
+	</header>
+	
+	<main>
+    <h1>Create a new article in <%= subName %></h1>
+    <form action="/articles/create" method="post">
+      <label for="title" >Title</label>
+      <input type="hidden" name="sub" value="<%= subName %>">
+      <input type="text" name="title" class="input-label"/> 
+      <br>
+      <label for="link" >Link</label>
+      <input type="text" name="link" class="input-label"/> 
+      <br>
+      <label for="text" >Text</label>
+      <br>
+      <textarea name="text" rows="5" cols="30" class="input-label"></textarea> 
+      <br>
+      <button type="submit">Create article</button>
+    </form>
+
+		<button><a href="/subs/show/<%= subName %>" class="go-back-button">Never mind</a></button>
+	</main>
+</body>
+
+</html>

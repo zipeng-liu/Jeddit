@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style/styles.css">
+	<title>Jeddit - Article</title>
+</head>
+
+<body>
+  <header>
+		<div class="navbar">
+			<button><a href="/">Home</a></button>
+			<button><a href="/debugpage">Debug</a></button>
+
+			<% if (user === null || user === undefined) { %>
+				<p class="login-status">You are not logged in</p>
+				<button><a href="/users/login">Login</a></button>
+				<button><a href="/users/register">Register</a></button>
+			<% } else { %>
+				<p class="login-status">You are <a href="/users/profile/<%= user.id %>" id="user-link"><%= user.username %></a></p>
+				<form method="POST" action="/users/logout" class="logout-button">
+					<button>Log out</button>
+				</form>
+			<% } %>
+		</div>
+	</header>
+	
+	<main>
+    <a href="/subs/show/<%= article.sub_name %>">back to <%= article.sub_name %></a>
+
+		<% if (user === null || user === undefined) { %>
+			<p></p>
+	  <% } else { %>
+			<% if (user.id === article.creator_id) { %>
+				<button><a href="/articles/edit/<%= article.id %>" class="edit-button">Edit article</a></button>
+				<button><a href="/articles/delete/<%= article.id %>" class="delete-button">Delete article</a></button>
+			<% } %>
+	  <% } %>
+	
+		<h1>
+			<table>
+				<tr>
+					<td><%= article.upvotes - article.downvotes %></td>
+					<td>
+						<% if (user === null || user === undefined) { %>
+							<span></span>
+						<% } else { %>
+							<% if (userArticleVote === undefined) { %>
+								<form action="/articles/vote/<%= article.id %>/upvote" method="POST">
+									<button type="submit" class="grey-button">▲</button>
+								</form>
+								<form action="/articles/vote/<%= article.id %>/downvote" method="POST">
+									<button type="submit" class="grey-button">▼</button>
+								</form>
+							<% } else if (userArticleVote.vote_value === 1) { %>
+								<form action="/articles/vote/<%= article.id %>/removevote" method="POST">
+									<button type="submit" class="green-button">▲</button>
+								</form>
+								<form action="/articles/vote/<%= article.id %>/downvote" method="POST">
+									<button type="submit" class="grey-button">▼</button>
+								</form>
+							<% } else { %>
+								<form action="/articles/vote/<%= article.id %>/upvote" method="POST">
+									<button type="submit" class="grey-button">▲</button>
+								</form>
+								<form action="/articles/vote/<%= article.id %>/removevote" method="POST">
+									<button type="submit" class="red-button">▼</button>
+								</form>
+							<% } %>
+						<% } %>						
+					</td>
+					<td>
+						<%= article.title %>
+					</td>
+				</tr>
+			</table>
+		</h1>
+
+		<% if (article.link.endsWith('.jpg') || article.link.endsWith('.jpeg') || article.link.endsWith('.gif') || article.link.endsWith('.png')) { %>
+			<img src="<%= article.link %>" alt="Image" class="article-image">
+		<% } else { %>
+			<a href="<%= article.link %>"><%= article.link %></a>
+	  <% } %>
+		
+	
+		<p>Posted by <a href="/users/profile/<%= creator.id %>"><%= creator.username %></a></p>
+    
+    <% if (article.text === null || article.text === undefined) { %>
+			<p></p>
+		<% } else { %>
+			<p><%= article.text %></p>
+		<% } %>
+
+		<h2>Comments</h2>
+
+		<form action="/articles/show/<%= article.id %>" method="GET">
+			<label for="ordering">Sort by:</label>
+			<select name="ordering" id="ordering">
+				<option value="">No sorting</option>
+				<option value="top">Top</option>
+				<option value="new">Newest</option>
+				<option value="old">Oldest</option>
+				<option value="ragebait">Ragebait</option>
+			</select>
+			<button type="submit">Sort</button>
+		</form>
+    
+		<% let index = 0; %>
+		<% commentList.forEach(comment => { %>
+			<li>
+				<table>
+						<tr>
+							<td>
+								<span><%= comment.upvotes - comment.downvotes %></span>
+							</td>
+							<td>
+								<% if (user === null || user === undefined) { %>
+									<span></span>
+								<% } else { %>
+									<% if (userCommentVoteList[index] === undefined) { %>
+										<form action="/comments/vote/<%= comment.id %>/upvote" method="POST">
+											<button type="submit" class="grey-button">▲</button>
+										</form>
+										<form action="/comments/vote/<%= comment.id %>/downvote" method="POST">
+											<button type="submit" class="grey-button">▼</button>
+										</form>
+									<% } else if (userCommentVoteList[index].vote_value === 1) { %>
+										<form action="/comments/vote/<%= comment.id %>/removevote" method="POST">
+											<button type="submit" class="green-button">▲</button>
+										</form>
+										<form action="/comments/vote/<%= comment.id %>/downvote" method="POST">
+											<button type="submit" class="grey-button">▼</button>
+										</form>
+									<% } else { %>
+										<form action="/comments/vote/<%= comment.id %>/upvote" method="POST">
+											<button type="submit" class="grey-button">▲</button>
+										</form>
+										<form action="/comments/vote/<%= comment.id %>/removevote" method="POST">
+											<button type="submit" class="red-button">▼</button>
+										</form>
+									<% } %>
+								<% } %>	
+							</td>
+							<td>
+								<a href="/users/profile/<%= comment.creator.id %>">
+									<%= comment.creator.username %>
+								</a> at 
+								<% 
+									let ts = comment.ts;
+									let timestamp = parseInt(ts);
+									let date = new Date(timestamp);
+									let formattedDateTime = date.toLocaleString();
+								%>
+								<%= formattedDateTime %>: <%= comment.text %>
+					
+								<% if (user === null || user === undefined) { %>
+									<span></span>
+								<% } else { %>
+									<% if (comment.creator_id === user.id) { %>
+										<a href="/comments/edit/<%= comment.id %>">Edit</a>
+										<a href="/comments/delete/<%= comment.id %>">Delete</a>
+									<% } %>
+								<% } %>
+							</td>
+						</tr>
+				</table>
+			</li>
+			<% index += 1 %>
+		<% }); %>
+		
+    
+		<% if (user === null || user === undefined) { %>
+			<p></p>
+		<% } else { %>
+			<p>Make your own comment</p>
+			<form action="/comments/create" method="post">
+				<input type="hidden" name="articleId" value=<%= article.id %>>
+				<textarea id="content" name="text" rows="5" cols="30"></textarea> 
+				<br>
+				<button type="submit">Create comment</button>
+			</form>
+		<% } %>
+	</main>
+</body>
+
+</html>

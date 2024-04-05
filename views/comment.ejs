@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style/styles.css">
+	<title>Jeddit - Comment</title>
+</head>
+
+<body>
+  <header>
+		<div class="navbar">
+			<button><a href="/">Home</a></button>
+			<button><a href="/debugpage">Debug</a></button>
+
+			<% if (user === null || user === undefined) { %>
+				<p class="login-status">You are not logged in</p>
+				<button><a href="/users/login">Login</a></button>
+				<button><a href="/users/register">Register</a></button>
+			<% } else { %>
+				<p class="login-status">You are <a href="/users/profile/<%= user.id %>" id="user-link"><%= user.username %></a></p>
+				<form method="POST" action="/users/logout" class="logout-button">
+					<button>Log out</button>
+				</form>
+			<% } %>
+		</div>
+	</header>
+	
+	<main>
+		<a href="/articles/show/<%= comment.article_id %>">back to article</a>
+
+		<% if (user === null || user === undefined) { %>
+			<p></p>
+	  <% } else { %>
+			<% if (comment.creator_id === user.id) { %>
+				<button><a href="/comments/edit/<%= comment.id %>" class="edit-button">Edit this comment</a></button>
+				<button><a href="/comments/delete/<%= comment.id %>" class="delete-button">Delete this comment</a></button>
+			<% } %>
+	  <% } %>
+
+		<table>
+			<tr>
+				<td><%= comment.upvotes - comment.downvotes %></td>
+				<td>
+					<% if (user === null || user === undefined) { %>
+						<span></span>
+					<% } else { %>
+						<% if (userCommentVote === undefined) { %>
+							<form action="/comments/vote/<%= comment.id %>/upvote" method="POST">
+								<button type="submit" class="grey-button">▲</button>
+							</form>
+							<form action="/comments/vote/<%= comment.id %>/downvote" method="POST">
+								<button type="submit" class="grey-button">▼</button>
+							</form>
+						<% } else if (userCommentVote.vote_value === 1) { %>
+							<form action="/comments/vote/<%= comment.id %>/removevote" method="POST">
+								<button type="submit" class="green-button">▲</button>
+							</form>
+							<form action="/comments/vote/<%= comment.id %>/downvote" method="POST">
+								<button type="submit" class="grey-button">▼</button>
+							</form>
+						<% } else { %>
+							<form action="/comments/vote/<%= comment.id %>/upvote" method="POST">
+								<button type="submit" class="grey-button">▲</button>
+							</form>
+							<form action="/comments/vote/<%= comment.id %>/removevote" method="POST">
+								<button type="submit" class="red-button">▼</button>
+							</form>
+						<% } %>
+					<% } %>						
+				</td>
+				<td>
+					<a href="/users/profile/<%= comment.creator.id %>">
+						<%= comment.creator.username %>
+					</a> at 
+					<% 
+					let ts = comment.ts;
+					let timestamp = parseInt(ts);
+					let date = new Date(timestamp);
+					let formattedDateTime = date.toLocaleString();
+					%>
+					<%= formattedDateTime %>: <%= comment.text %>
+				</td>
+			</tr>
+		</table>
+	</main>
+</body>
+
+</html>

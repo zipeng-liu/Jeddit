@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style/styles.css">
+	<title>Jeddit - Show</title>
+</head>
+
+<body>
+  <header>
+		<div class="navbar">
+			<button><a href="/">Home</a></button>
+			<button><a href="/debugpage">Debug</a></button>
+
+			<% if (user === null || user === undefined) { %>
+				<p class="login-status">You are not logged in</p>
+				<button><a href="/users/login">Login</a></button>
+				<button><a href="/users/register">Register</a></button>
+			<% } else { %>
+				<p class="login-status">You are <a href="/users/profile/<%= user.id %>" id="user-link"><%= user.username %></a></p>
+				<form method="POST" action="/users/logout" class="logout-button">
+					<button>Log out</button>
+				</form>
+			<% } %>
+		</div>
+	</header>
+	
+	<main>
+		<h1>Welcome to <%= id %></h1>
+    <h2>Articles</h2>
+
+		<form action="/subs/show/<%= id %>" method="GET">
+			<label for="ordering">Sort by:</label>
+			<select name="ordering" id="ordering">
+				<option value="">No sorting</option>
+				<option value="top">Top</option>
+				<option value="new">Newest</option>
+				<option value="old">Oldest</option>
+				<option value="ragebait">Ragebait</option>
+			</select>
+			<button type="submit">Sort</button>
+		</form>
+
+		<ul>
+			<% let index = 0; %>
+			<% articleVoteList.forEach(article => { %>
+				<li>
+					<table>
+						<tr>
+							<td>
+								<%= article.upvotes - article.downvotes %>
+							</td>
+							<td>
+								<% if (user === null || user === undefined) { %>
+									<span></span>
+								<% } else { %>
+									<% if (userArticleVoteList[index] === undefined) { %>
+										<form action="/articles/vote/<%= article.id %>/upvote" method="POST">
+											<button type="submit" class="grey-button">▲</button>
+										</form>
+										<form action="/articles/vote/<%= article.id %>/downvote" method="POST">
+											<button type="submit" class="grey-button">▼</button>
+										</form>
+									<% } else if (userArticleVoteList[index].vote_value === 1) { %>
+										<form action="/articles/vote/<%= article.id %>/removevote" method="POST">
+											<button type="submit" class="green-button">▲</button>
+										</form>
+										<form action="/articles/vote/<%= article.id %>/downvote" method="POST">
+											<button type="submit" class="grey-button">▼</button>
+										</form>
+									<% } else { %>
+										<form action="/articles/vote/<%= article.id %>/upvote" method="POST">
+											<button type="submit" class="grey-button">▲</button>
+										</form>
+										<form action="/articles/vote/<%= article.id %>/removevote" method="POST">
+											<button type="submit" class="red-button">▼</button>
+										</form>
+									<% } %>
+								<% } %>						
+							</td>
+							<td>
+								<a href="/articles/show/<%= article.id %>"><%= article.title %></a>
+							</td>
+							<td>
+								(posted by 
+								<a href="/users/profile/<%= article.creator_id %>">
+									<%= article.creator.username %>
+								</a> at 
+								<% 
+									let ts = article.ts;
+									let timestamp = parseInt(ts);
+									let date = new Date(timestamp);
+									let formattedDateTime = date.toLocaleString();
+								%>
+								<%= formattedDateTime %>)
+							</td>
+						</tr>
+					</table>
+				</li>
+				<% index += 1 %>
+			<% }); %>
+		</ul>
+
+		<% if (user === null || user === undefined) { %>
+			<p></p>
+		<% } else { %>
+			<button><a href="/articles/create?sub=<%= id %>" class="create-article-button">Create a new article</a></button>
+		<% } %>
+	</main>
+</body>
+
+</html>

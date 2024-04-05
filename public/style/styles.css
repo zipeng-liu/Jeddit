@@ -1,0 +1,103 @@
+body {
+  font-size: 18px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: black;
+}
+
+.debug-reset-button a {
+  text-decoration: none;
+  color: black;
+}
+
+.login-status {
+  display: inline-block; 
+  text-align: center;
+}
+
+.logout-button {
+  display: inline-block;
+}
+
+#user-link {
+  text-decoration: underline;
+  color: blue;
+}
+
+.input-label {
+  margin-bottom: 10px; 
+}
+
+.input-field {
+  margin-bottom: 10px;
+}
+
+.register-button,
+.login-button {
+  margin-top: 10px;
+}
+
+.create-subjeddits-button,
+.create-article-button, 
+.edit-button,
+.delete-button,
+.go-back-button,
+.delete-article-button {
+  text-decoration: none;
+  color: black;
+  margin-top: 20px;
+}
+
+.article-image {
+  max-width: 25%;
+  height: auto;
+}
+
+li {
+  list-style-type: none; 
+}
+
+td {
+  padding: 5px; 
+}
+
+.green-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.green-button:hover {
+  background-color: darkgreen;
+}
+
+.red-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.red-button:hover {
+  background-color: darkred;
+}
+
+.grey-button {
+  background-color: lightgrey;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.grey-button:hover {
+  background-color: grey;
+}

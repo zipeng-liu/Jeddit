@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/style/styles.css">
+  <title>Jeddit - Login</title>
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <button><a href="/">Home</a></button>
+      <button><a href="/debugpage">Debug</a></button>
+      <p class="login-status">You are not logged in</p>
+      <button><a href="/users/login">Login</a></button>
+      <button><a href="/users/register">Register</a></button>
+    </div>
+  </header>
+
+  <main>
+    <h1>Login</h1>
+    <form action="/users/login" method="POST" class="login-form">
+      <label for="username" class="input-label">Username</label>
+      <input type="text" name="username" class="input-field"/> 
+      <br>
+      <label for="password" class="input-label">Password</label>
+      <input type="password" name="password" class="input-field"/>
+      <br> 
+      <button type="submit" class="login-button">Login</button>
+    </form>    
+  </main>
+
+</body>
+
+</html>
